@@ -1,5 +1,9 @@
 #**Finding Lane Lines on the Road** 
 
+The repo contains the following:
+ - output folder contains the output images and videos of the pipeline
+ - LaneDetect.ipynb source code for pipeline
+ - Input images and videos
 
 The goals / steps of this project are the following:
 * Make a pipeline that finds lane lines on the road
