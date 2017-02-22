@@ -25,49 +25,61 @@ The goals / steps of this project are the following:
 My pipeline executes the following steps:
 * Take the input RGB image
 ![alt text][image1]
+
 * Use cv2.inRange() & cv2.bitwise_and() for retaining pixels with yellow & white color.
   And this will blacken out all the other pixels.
   The assumption here is that the lanes would be either yellow or white color
   This will result in an image with predominantly lanes in it.
 ![alt text][image2]
+
 * Convert the output image in the previous step into greyscale.
 ![alt text][image3]
+
 * Apply gaussian blur and then canny edge on the image.
 ![alt text][image4]
+
 * Apply region of interest polygon on the image to the region where lane lines would get detected
   - Hardcoded vertices for region of interest will not work for videos with varying resolutions
   - Calculating the coordinates of the polygon vertices relative to the image resolution would be better
     to make the pipeline robust
 ![alt text][image5]
+
 * Detect lines using HoughLinesP
 * Next step is generate two lines  which denote the left and right lanes
   - Filtering
-  In the previous step, HoughLninesP would output many lines that the algorithm has detected
+    In the previous step, HoughLninesP would output many lines that the algorithm has detected
+  
 ![alt text][image6]
-  It would detect lines which are
-  - left & right edges of lanes
-  - horizontal edges of lane blocks
-  - and many other outliers like edges of the small lane blocks, etc.
-  To separate out the left and right lanes, it is calculating the slope of the detected lines
-  and based on the slope being positive or negative, it is dividing the lines into two lane sets (left set & right set).
-  It is rejecting the following lines as outliers:
-  - lines with positive slope but are on the left hand-side of the region of interest.
-  - lines with negative slope but are on the right hand-side of the region of interest.
-  - lines with slope = 0
-![alt text][image7]    
+    It would detect lines which are
+    1)left & right edges of lanes
+    2)horizontal edges of lane blocks
+    3)and many other outliers like edges of the small lane blocks, etc.
+    To separate out the left and right lanes, it is calculating the slope of the detected lines
+    and based on the slope being positive or negative, it is dividing the lines into two lane sets (left set & right set).
+    It is rejecting the following lines as outliers:
+    1)lines with positive slope but are on the left hand-side of the region of interest.
+    2)lines with negative slope but are on the right hand-side of the region of interest.
+    3)lines with slope = 0
+    
+![alt text][image7]
+
   - Averaging
-  The filtering would output the two sets of lines (left & right) which are predominantly part of the right and left lanes.
-  An average of lines in each set would generate a single line which should fall within the edges/boundaries of that lane.
+    The filtering would output the two sets of lines (left & right) which are predominantly part of the right and left lanes.
+    An average of lines in each set would generate a single line which should fall within the edges/boundaries of that lane.
+    
 ![alt text][image8] 
   
   - Extrapolation
-  Previous step gives two lines which represent the right and left lane.
-  But these are small lines which do not cover the length of the lanes.
-  By finding the representation of the lines in the form of y = mx + c,
-  the x-intercept of the average line on top and bottom line of the polygon
-  of region of interest
-![alt text][image9]
+    Previous step gives two lines which represent the right and left lane.
+    But these are small lines which do not cover the length of the lanes.
+    By finding the representation of the lines in the form of y = mx + c,
+    the x-intercept of the average line on top and bottom line of the polygon
+    of region of interest
+ ![alt text][image9]
+ 
 * Superimposition of the  denotes lines on the original image
+The annotates lines are superimposed onto the original image
+using cv2.addWeighted
 ![alt text][image10]
 
 
@@ -100,3 +112,8 @@ they will get detected and will hamper the line detection
 
 A possible improvement would be to not rely on lane colors and
 come up with a robust algorithm that can discard outliers
+
+Another improvement would be to apply smoothing on the lines 
+detected in the current frame by using the lines detected in the
+previous frame
+
