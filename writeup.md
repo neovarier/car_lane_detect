@@ -77,7 +77,7 @@ My pipeline executes the following steps:
     Previous step gives two lines which represent the right and left lane.
     But these are small lines which do not cover the length of the lanes.
     By finding the representation of the lines in the form of y = mx + c,
-    the x-intercept of the average line on top and bottom line of the polygon
+    the x-intercept of the average line is found on top and bottom line of the polygon
     of region of interest
  ![alt text][image9]
  
@@ -87,21 +87,20 @@ using cv2.addWeighted
 ![alt text][image10]
 
 
-###2. Experience
+###2. Methodologies tried
 Using step 2 simplifies the problem as it discard other portions of the frame that
 could potentially result in outlier edges and lines.
 Specially the edges of the shadows on road, bonnet, etc.
 If we do not use this step, then we end with many outlier edeges and lines.
-I had tried to remove the outlier lines by trying the fit the slopes of the
-detected lines in a gaussian curve where mu is the average of the slopes of
+I had tried to remove the outlier lines by usinggaussian curve where mu is the average of the slopes of
 the detected lines and sigma is the standard deviation of the slopes.
-Any lines with slope where (slope - mu)/sigma > sigma should discard the outlier lines
-But there were some cases the number of outlier are more than the genuine lines
-which was resulting in an inverse bell curve. Also there were cases where there are only
-outliers. It was difficult apply multiple filtering to get the correct lines.
+I discarded the lines with (slope - mu)/sigma > 1.
+But there were some cases where the number of outliers were more than the genuine lines
+which was resulting in an inverse bell curve. Also there were cases where there were only
+outliers. It was inefficient to apply multiple filtering to get the correct lines.
 
-After using step 2 of retaining the pixels with yellow and white color and blacking others
-was discarding all the potential outliers
+Using step 2, retaining the pixels with yellow and white color and blackening others,
+helped in discarding all the potential outliers in an efficient manner.
 
 ###3. Identify potential shortcomings with your current pipeline
 A shortcoming with the current pipeline is that I am making an assumption
@@ -114,10 +113,10 @@ they will get detected and will hamper the line detection
 
 ###4. Suggest possible improvements to your pipeline
 
-A possible improvement would be to not rely on lane colors and
-come up with a robust algorithm that can discard outliers
+A possible improvement would be to use information of lane colors in combination with
+a robust filtering algorithm that can discard outliers
 
 Another improvement would be to apply smoothing on the lines 
 detected in the current frame by using the lines detected in the
-previous frame
+previous frame.
 
